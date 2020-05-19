@@ -4,6 +4,7 @@ exports.up = function(knex) {
     .createTable('categories', table => {
         table.increments('id').notNullable();
         table.string('name').unique().notNullable;
+        table.string('img_url');
     })
     .createTable('products', table => {
         table.increments('id').notNullable();
@@ -16,6 +17,7 @@ exports.up = function(knex) {
         table.string('price');
         table.string('description');
         table.integer('stock');
+        table.integer('is_featured');
     })
 };
 

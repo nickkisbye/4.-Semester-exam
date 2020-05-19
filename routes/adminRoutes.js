@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { authMiddleware, redirectLoggedInUser, adminMiddleware } = require('../middleware/AuthManager');
+const { authMiddleware, redirectLoggedInUser, adminMiddleware } = require('../middleware/MiddlewareManager');
 
 const Address = require('../models/Address');
 const Category = require('../models/Category');

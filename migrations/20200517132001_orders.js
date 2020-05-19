@@ -4,9 +4,11 @@ exports.up = function (knex) {
         .createTable('orders', table => {
             table.increments('id').notNullable();
             table.dateTime('created_at').notNullable().defaultTo(knex.raw('CURRENT_TIMESTAMP'));
+            table.string('order_id');
 
             table.integer('customer_id').unsigned().notNullable();
             table.foreign('customer_id').references('users.id');
+            table.string('state');
 
         })
         .createTable('product_order_junc', table => {

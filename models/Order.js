@@ -9,6 +9,7 @@ class Order extends Model {
         users: {
           relation: Model.BelongsToOneRelation,
           modelClass: User,
+          filter: query => query.select('email'),
           join: {
             from: 'orders.customer_id',
             to: 'users.id'

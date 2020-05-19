@@ -1,62 +1,87 @@
 const router = require('express').Router();
-const { authMiddleware, redirectLoggedInUser, adminMiddleware } = require('../middleware/AuthManager');
+const fs = require('fs');
+const path = require('path');
+const { authMiddleware, redirectLoggedInUser, adminMiddleware } = require('../middleware/MiddlewareManager');
+const { generateLayout } = require('../utils/LayoutGenerator')
 
 const Address = require('../models/Address');
 const User = require('../models/User');
+
 
 /**
  * PUBLIC
  */
 
-router.get('/products', (req, res) => {
-    return res.sendFile(`${__dirname}/views/products.html`);
+router.get('/', (req, res) => {
+    const frontpage = fs.readFileSync(path.join(__dirname, '../views/', 'frontpage.html'), "utf8");
+    return res.send(generateLayout(frontpage, req.session.user));
+});
+
+router.get('/products/', (req, res) => {
+    const products = fs.readFileSync(path.join(__dirname, '../views/', 'products.html'), "utf8");
+    return res.send(generateLayout(products, req.session.user));
 });
 
 router.get('/categories', (req, res) => {
-    return res.sendFile(`${__dirname}/views/categories.html`);
-});
-
-router.get('/about', (req, res) => {
-    return res.sendFile(`${__dirname}/views/about.html`);
-});
-
-router.get('/contact', (req, res) => {
-    return res.sendFile(`${__dirname}/views/contact.html`);
+    const categories = fs.readFileSync(path.join(__dirname, '../views/', 'categories.html'), "utf8");
+    return res.send(generateLayout(categories, req.session.user));
 });
 
 router.get('/login', redirectLoggedInUser, (req, res) => {
-    return res.sendFile(`${__dirname}/views/login.html`);
+    const login = fs.readFileSync(path.join(__dirname, '../views/', 'login.html'), "utf8");
+    return res.send(generateLayout(login, req.session.user));
 });
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
-    const user = await User.query().select().where('username', username).andWhere('password', password).withGraphFetched('roles');
-    if (user) {
+    const user = await User.query().select()
+    .where(builder => builder.where('username', username).orWhere('email', username))
+    .where('password', password).withGraphFetched('roles');
+
+    if (user.length > 0) {
         req.session.user = {
             id: user[0].id,
             username: user[0].username,
-            role: user[0].role.role
+            role: user[0].roles.role
         }
-        if (req.session.user.role === 'ADMIN') return res.sendFile(`${__dirname}/admin/products.html`);
-        if (req.session.user.role === 'USER') return res.sendFile(`${__dirname}/user/settings.html`);
+        if (req.session.user.role === 'ADMIN') return res.redirect('/admin/products');
+        if (req.session.user.role === 'USER') return res.redirect('/orders');
     }
-    return res.sendFile(`${__dirname}/user/index.html`);
+    return res.redirect('/');
 });
 
+router.get('/logout', (req, res) => {
+    req.session.destroy();
+    return res.redirect('/');
+});
 
 router.get('/reset', redirectLoggedInUser, (req, res) => {
-    return res.sendFile(`${__dirname}/views/reset.html`);
+    // To be implemented
+    const reset = fs.readFileSync(path.join(__dirname, '../views/', 'reset.html'), "utf8");
+    return res.send(generateLayout(reset, req.session.user));
 });
 
 router.get('/signup', redirectLoggedInUser, (req, res) => {
-    return res.sendFile(`${__dirname}/views/signup.html`);
+    const signup = fs.readFileSync(path.join(__dirname, '../views/', 'signup.html'), "utf8");
+    return res.send(generateLayout(signup, req.session.user));
 });
 
 router.post('/signup', async (req, res) => {
-    const { username, email, password, first_name, last_name, age, phone_number, address, city, postal_code } = req.body;
+    const { username, email, password, password_repeat, first_name, last_name, age, phone_number, address, city, postal_code } = req.body;
 
-    const newAddress = await Address.query().insert({ postal_code, city, address });
+    if(password !== password_repeat) return res.redirect('/signup');
+
+    const fetchAddress = await Address.query().select('id').where('postal_code', postal_code).andWhere('city', city).andWhere('address', address);
+    const addressAlreadyExists = fetchAddress.length > 0;
+    let newAddress = null;
+
+    if(addressAlreadyExists) {
+        newAddress = { id: fetchAddress[0].id };
+    } else {
+        newAddress = await Address.query().insert({ postal_code, city, address });
+    }
+
     const newUser = await User.query().insert({
         username,
         email,
@@ -80,31 +105,66 @@ router.post('/signup', async (req, res) => {
  */
 
 router.get('/orders', authMiddleware, (req, res) => {
-    return res.sendFile(`${__dirname}/user/orders.html`);
+    const orders = fs.readFileSync(path.join(__dirname, '../views/', 'user/orders.html'), "utf8");
+    return res.send(generateLayout(orders, req.session.user));
+});
+
+router.get('/order/:id', authMiddleware, (req, res) => {
+    const orders = fs.readFileSync(path.join(__dirname, '../views/', 'user/order.html'), "utf8");
+    return res.send(generateLayout(orders, req.session.user));
 });
 
 router.get('/settings', authMiddleware, (req, res) => {
-    return res.sendFile(`${__dirname}/user/settings.html`);
+    const settings = fs.readFileSync(path.join(__dirname, '../views/', 'user/settings.html'), "utf8");
+    return res.send(generateLayout(settings, req.session.user));
+});
+
+router.post('/update', authMiddleware, async (req, res) => {
+    const { username, email, first_name, last_name, age, phone_number, address_id, address, city, postal_code } = req.body;
+    
+    await User.query().patch({
+        username,
+        email,
+        first_name,
+        last_name,
+        age,
+        phone_number
+    }).where('id', req.session.user.id);
+
+    await Address.query().patch({ address, city, postal_code }).where('id', address_id);
+
+    return res.redirect('/settings');
 });
 
 /**
  * ADMIN
  */
 
-router.get('/categories', adminMiddleware, (req, res) => {
-    return res.sendFile(`${__dirname}/admin/categories.html`);
+router.get('/admin/categories', adminMiddleware, (req, res) => {
+    const categories = fs.readFileSync(path.join(__dirname, '../views/', 'admin/categories.html'), "utf8");
+    return res.send(generateLayout(categories, req.session.user));
 });
 
-router.get('/orders', adminMiddleware, (req, res) => {
-    return res.sendFile(`${__dirname}/admin/orders.html`);
+router.post('/categories', adminMiddleware, (req, res) => {
+    return res.redirect('/categories');
 });
 
-router.get('/products', adminMiddleware, (req, res) => {
-    return res.sendFile(`${__dirname}/admin/products.html`);
+router.get('/admin/products', adminMiddleware, (req, res) => {
+    const products = fs.readFileSync(path.join(__dirname, '../views/', 'admin/products.html'), "utf8");
+    return res.send(generateLayout(products, req.session.user));
 });
 
-router.get('/users', adminMiddleware, (req, res) => {
-    return res.sendFile(`${__dirname}/admin/users.html`);
+router.post('/products', adminMiddleware, (req, res) => {
+    return res.redirect('/products');
+});
+
+router.get('/admin/users', adminMiddleware, (req, res) => {
+    const users = fs.readFileSync(path.join(__dirname, '../views/', 'admin/users.html'), "utf8");
+    return res.send(generateLayout(users, req.session.user));
+});
+
+router.post('/users', adminMiddleware, (req, res) => {
+    return res.redirect('/users');
 });
 
 module.exports = router;
