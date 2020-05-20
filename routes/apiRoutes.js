@@ -9,8 +9,7 @@ const Product = require('../models/Product');
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 const Roles = require('../models/Roles');
-const SelectManager = require('../utils/SelectManager');
-const selectManager = new SelectManager();
+const selectManager = require('../services/QueryService');
 
 // API routes
 
@@ -65,6 +64,7 @@ router.get('/product/:id', async (req, res) => {
 
 router.get('/orders', authMiddleware, async (req, res) => {
     let orders = null;
+    // User should be able to see his/her own orders. Admin can see all orders.
     if(req.session.user.role === 'USER') {
         orders = await Order.query().select().where('customer_id', req.session.user.id).withGraphFetched('users');
     } else {
@@ -104,18 +104,6 @@ router.get('/stats', async (_, res) => {
     }
 
     res.send({ stats });
-});
-
-router.get('/transactions', async (_, res) => {
-    const transactions = await Transaction.query().select().withGraphFetched('order');
-    return res.send({ transactions });
-});
-
-router.get('/transaction/:id', async (req, res) => {
-    const transaction = await Transaction.query().findById(req.params.id).withGraphFetched('order');
-    const orderDetails = await OrderDetails.query().findById(transaction.order_id).select('id');
-    const order = await Order.query().select().where('order_id', orderDetails.id).withGraphFetched('products');
-    return res.send({ transaction, order });
 });
 
 

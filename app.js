@@ -3,7 +3,12 @@ const app = express();
 const session = require('express-session');
 const rateLimit = require('express-rate-limit');
 const secret = require('./configs/mysqlConfig').connection.sessionSecret;
+const fileupload = require('express-fileupload');
+
 const { authMiddleware } = require('./middleware/MiddlewareManager');
+
+const dotenv = require("dotenv");
+dotenv.config();
 
 app.use(express.static('public'));
 app.use(express.static('views'));
@@ -11,6 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: secret, resave: true, saveUninitialized: false }));
 // app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 10 }));
+app.use(fileupload());
 
 // ROUTES
 const pageRoute = require('./routes/pageRoutes');

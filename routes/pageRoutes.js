@@ -1,11 +1,14 @@
 const router = require('express').Router();
 const fs = require('fs');
 const path = require('path');
+
 const { authMiddleware, redirectLoggedInUser, adminMiddleware } = require('../middleware/MiddlewareManager');
-const { generateLayout } = require('../utils/LayoutGenerator')
+const { generateLayout } = require('../services/LayoutService')
 
 const Address = require('../models/Address');
 const User = require('../models/User');
+const Category = require('../models/Category');
+const ImageService = require('../services/ImageService');
 
 
 /**
@@ -26,6 +29,8 @@ router.get('/categories', (req, res) => {
     const categories = fs.readFileSync(path.join(__dirname, '../views/', 'categories.html'), "utf8");
     return res.send(generateLayout(categories, req.session.user));
 });
+
+
 
 router.get('/login', redirectLoggedInUser, (req, res) => {
     const login = fs.readFileSync(path.join(__dirname, '../views/', 'login.html'), "utf8");
@@ -147,6 +152,22 @@ router.get('/admin/categories', adminMiddleware, (req, res) => {
 
 router.post('/categories', adminMiddleware, (req, res) => {
     return res.redirect('/categories');
+});
+
+router.post('/category', (req, res) => {
+    const { name } = req.body;
+    const image = req.files.img_url
+    
+    const imageService = new ImageService();
+    imageService.uploadImage(image, name);
+
+    return res.redirect('/admin/categories');
+});
+
+router.post('/category/:id', adminMiddleware, async (req, res) => {
+    const imageService = new ImageService();
+    imageService.deleteImage(req.params.id);
+    return res.redirect('/admin/categories');
 });
 
 router.get('/admin/products', adminMiddleware, (req, res) => {
