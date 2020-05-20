@@ -6,25 +6,26 @@
             <div class="row">
                 <div class="col s6">
                     <div class="row">
-                        <form action="/category" method="POST" enctype="multipart/form-data">
+                        LIGE NU ER DER PROBLEMER MED UPLOAD OG REDIRECT - LAV ET ASYNKRONT KALD I STEDET OG HANDLE FILERNE PÅ FRONTEND.
+                        <div class="col s12">
                             <div class="input-field col s8 statsMargin">
                                 <input id="name" name="name" type="text" class="validate">
                                 <label class="active">Category name</label>
                             </div>
-                                            <div class="file-field input-field col s8 statsMargin">
-                                                <div class="btn light-blue darken-3">
-                                                    <span>File</span>
-                                                    <input type="file" name="img_url">
-                                                </div>
-                                                <div class="file-path-wrapper">
-                                                    <input class="file-path validate" type="text"
-                                                        placeholder="Upload one or more files">
-                                                </div>
-                                            </div>
-                            <button class="btn waves-effect waves-light col s8 statsMargin light-blue darken-3" type="submit" name="action">Save
+                        </div>
+                        <div class="col s8 statsMargin" id="file-container">
+                            <form action="/category" method="POST" enctype="multipart/form-data" class="dropzone">
+                                <div class="file-field input-field col s8 statsMargin fallback">
+                                    <input type="file" name="file">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col s12">
+                            <button class="btn waves-effect waves-light col s8 statsMargin light-blue darken-3"
+                                type="submit" name="action">Save
                                 <i class="material-icons right">send</i>
                             </button>
-                        </form>
+                        </div>
                     </div>
                 </div>
                 <div class="col s6">

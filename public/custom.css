@@ -10,3 +10,9 @@
 .productMargin {
     margin: 30px 30px 30px 0;
 }
+
+.dropzone {
+    background-color: #f8f8f8;
+    border: 1px solid #ececec;
+    color: 1px solid #030303;
+}

@@ -56,5 +56,6 @@ switch (pathname) {
                         `);
             })
         })
+
         break;
 }

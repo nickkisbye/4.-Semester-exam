@@ -9,7 +9,7 @@ const Product = require('../models/Product');
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 const Roles = require('../models/Roles');
-const selectManager = require('../services/QueryService');
+const queryService = require('../services/QueryService');
 
 // API routes
 
@@ -23,7 +23,7 @@ router.get('/roles', async (_, res) => {
 });
 
 router.get('/users', adminMiddleware, async (_, res) => {
-    const users = await User.query().select(selectManager.getSecureParameters()).withGraphFetched('roles').withGraphFetched('address');
+    const users = await User.query().select(queryService.getSecureParameters()).withGraphFetched('roles').withGraphFetched('address');
     return res.send({ users });
 });
 
@@ -33,7 +33,7 @@ router.get('/user/:id', adminMiddleware, async (req, res) => {
 });
 
 router.get('/settings', authMiddleware, async (req, res) => {
-    const settings = await User.query().select(selectManager.getSecureParameters()).where('id', req.session.user.id).withGraphFetched('address').limit(1);
+    const settings = await User.query().select(queryService.getSecureParameters()).where('id', req.session.user.id).withGraphFetched('address').limit(1);
     return res.send({ settings: settings[0] });
 });
 

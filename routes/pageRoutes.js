@@ -156,8 +156,8 @@ router.post('/categories', adminMiddleware, (req, res) => {
 
 router.post('/category', (req, res) => {
     const { name } = req.body;
-    const image = req.files.img_url
-    
+    const image = req.files.file
+
     const imageService = new ImageService();
     imageService.uploadImage(image, name);
 
