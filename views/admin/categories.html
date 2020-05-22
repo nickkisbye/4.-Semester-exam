@@ -6,23 +6,20 @@
             <div class="row">
                 <div class="col s6">
                     <div class="row">
-                        LIGE NU ER DER PROBLEMER MED UPLOAD OG REDIRECT - LAV ET ASYNKRONT KALD I STEDET OG HANDLE FILERNE PÅ FRONTEND.
-                        <div class="col s12">
-                            <div class="input-field col s8 statsMargin">
-                                <input id="name" name="name" type="text" class="validate">
-                                <label class="active">Category name</label>
-                            </div>
-                        </div>
                         <div class="col s8 statsMargin" id="file-container">
-                            <form action="/category" method="POST" enctype="multipart/form-data" class="dropzone">
-                                <div class="file-field input-field col s8 statsMargin fallback">
-                                    <input type="file" name="file">
+                            <form id="dropzoneForm" class="dropzone">
+                                <div style="margin-top: -100px;">
+                                    <label class="active">Category name</label>
+                                    <input id="category_name" name="category_name" type="text" class="validate">
+                                </div>
+                                <div class="fallback">
+                                    <input name="file" type="file" />
                                 </div>
                             </form>
                         </div>
                         <div class="col s12">
                             <button class="btn waves-effect waves-light col s8 statsMargin light-blue darken-3"
-                                type="submit" name="action">Save
+                                id="file-submit">Save
                                 <i class="material-icons right">send</i>
                             </button>
                         </div>
@@ -44,4 +41,20 @@
             </div>
         </div>
     </div>
+    <script>
+        Dropzone.options.dropzoneForm = {
+            url: '/category',
+            autoProcessQueue: false,
+            acceptedFiles: '.png, .jpg, .gif, .bmp, .jpeg',
+            init: function () {
+                var myDropzone = this;
+                $('#file-submit').on('click', (e) => {
+                    myDropzone.processQueue();
+                    setTimeout(() => {
+                        window.location.href = "/admin/categories"
+                    }, 2000);
+                });
+            }
+        }
+    </script>
 </body>

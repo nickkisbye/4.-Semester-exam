@@ -15,13 +15,12 @@ app.use(express.static('views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: secret, resave: true, saveUninitialized: false }));
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+// app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 app.use(fileupload());
 
 // ROUTES
 const pageRoute = require('./routes/pageRoutes');
 const apiRoute = require('./routes/apiRoutes');
-const adminRoute = require('./routes/adminRoutes');
 
 app.use(pageRoute);
 app.use("/api", apiRoute);

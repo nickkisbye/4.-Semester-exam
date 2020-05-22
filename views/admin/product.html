@@ -1,0 +1,46 @@
+<body>
+    <div class="container">
+        <div id="stats" class="row"></div>
+        <div class="row statsMargin" id="orders">
+            <h4>Add product</h4>
+            <div class="row">
+                <form action="/product" method="POST" enctype="multipart/form-data">
+                    <div>
+                        <div class="input-field col s6">
+                            <input name="name" type="text" class="validate">
+                            <label>Product name</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input name="price" type="text" class="validate">
+                            <label>Price</label>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input name="description" type="text" class="validate">
+                                <label>Description</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input name="stock" type="text" class="validate">
+                                <label>Stock</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <select name="category_id" id="category-select" class="browser-default">
+                                    <option value="" disabled selected>Category</option>
+                                    
+                                </select>
+                            </div>
+                            <div class="input-field col s6">
+                                <input name="file" type="file" />
+                            </div>
+                        </div>
+                        <button class="btn waves-effect waves-light light-blue darken-3" type="submit">Add
+                                <i class="material-icons right">send</i>
+                            </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>

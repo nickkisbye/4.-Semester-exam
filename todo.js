@@ -1,9 +1,7 @@
 /**
- * Betalingsflow med en varer mangler
- * CRUD på varer -> herunder implementation af image upload (s3 bucket)
- * CRUD på kategorier -> herunder implementation af image upload (s3 bucket)
- * CRUD på users
- * Bcrypt password
- * password recovery
- * Setup .env med amazon og stripe credentials
+ * Produkt detalje side
+ * Betalingsflow på varer: kurv -> checkout -> minus fra lagerbeholdning -> stripe integration
+ * Sockets impl -> et "tool" der notifikerer admin om hvor folk er på siden.
+ * 
+ * TIL SIDST: Oprydning i kode -> opdele routes, refakturering, mm.
  */

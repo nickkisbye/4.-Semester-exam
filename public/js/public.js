@@ -66,6 +66,7 @@ $('document').ready(() => {
             break;
         case "/products":
             $.get('/api/products', ({ products }) => {
+              console.log(products);
                 products.forEach((product) => {
                     $('#products').append(`
             <div class="col s12 m3">
@@ -76,9 +77,8 @@ $('document').ready(() => {
               </div>
               <div class="card-content">
               <span class="card-title">${product.name}</span>
+                <p><strong>Category:</strong> ${product.category.name}</p>
                 <p><strong>In stock:</strong> ${product.stock} </p>
-                <p>${product.description}</p>
-
                 <p>${product.price},-</p>
               </div>
             </div>

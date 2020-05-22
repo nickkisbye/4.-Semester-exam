@@ -1,7 +1,6 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const crypto = require('crypto');
-const Category = require('../models/Category');
 
 class ImageService {
     
@@ -14,27 +13,27 @@ class ImageService {
         });
     }
 
-    uploadImage = (fileName, name) => {
-        const fileString = crypto.randomBytes(16).toString('hex');
-        const params = { Bucket: this.BUCKET_NAME, Key: fileString + '.jpg', Body: fileName.data }
-        
-        this.s3bucket.upload(params, async (err, data) => {
-            if (err) throw err;
-            await Category.query().insert({ name, img_url: data.Location })
-        });
+    uploadImage = (fileName) => {
+        return new Promise((resolve, reject) => {
+            const fileString = crypto.randomBytes(16).toString('hex');
+            const params = { Bucket: this.BUCKET_NAME, Key: fileString + '.jpg', Body: fileName.data }
+            
+            this.s3bucket.upload(params, async (err, data) => {
+                if (err) reject(err);
+                resolve(data.Location);
+            });
+        })
     }
 
-    deleteImage = async (id) => {
-        const category = await Category.query().select('img_url').where('id', id);
-        const params = { Bucket: this.BUCKET_NAME, Key: category[0].img_url.split('/')[3] }
-
-        this.s3bucket.deleteObject(params, async (err, data) => {
-            if (err) throw err;
-            await Category.query().findById(id).delete();
-            return;
-        });
+    deleteImage = async (key) => {
+        const params = { Bucket: this.BUCKET_NAME, Key: key}
+        return new Promise((resolve, reject) => {
+            this.s3bucket.deleteObject(params, async (err, data) => {
+                if (err) reject(err);
+                resolve();
+            });
+        })
     }
-
 }
 
 module.exports = ImageService;

@@ -6,10 +6,11 @@ const Category = require('../models/Category');
 const OrderDetails = require('../models/OrderDetails');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
-const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 const Roles = require('../models/Roles');
 const queryService = require('../services/QueryService');
+const ImageService = require('../services/ImageService');
+
 
 // API routes
 
@@ -32,6 +33,11 @@ router.get('/user/:id', adminMiddleware, async (req, res) => {
     return res.send({ user });
 });
 
+router.delete('/user/:id', adminMiddleware, async (req, res) => {
+    await User.query().findById(req.params.id).delete();
+    return res.send({ message: "deleted!" });
+});
+
 router.get('/settings', authMiddleware, async (req, res) => {
     const settings = await User.query().select(queryService.getSecureParameters()).where('id', req.session.user.id).withGraphFetched('address').limit(1);
     return res.send({ settings: settings[0] });
@@ -47,9 +53,35 @@ router.get('/category/:id', async (req, res) => {
     return res.send({ category });
 });
 
+router.delete('/category/:id', adminMiddleware, async (req, res) => {
+    const imageService = new ImageService();
+    const id = req.params.id;
+
+    const category = await Category.query().select('img_url').where('id', id);
+    const key = category[0].img_url.split('/')[3];
+
+    await imageService.deleteImage(key);
+    await Category.query().findById(id).delete();
+    
+    return res.send({ message: "deleted!" });
+});
+
 router.get('/products', async (_, res) => {
     const products = await Product.query().select().withGraphFetched('category');
     return res.send({ products });
+});
+
+router.delete('/product/:id', adminMiddleware, async (req, res) => {
+    const imageService = new ImageService();
+    const id = req.params.id;
+
+    const product = await Product.query().select('image_url').where('id', id);
+    const key = product[0].image_url.split('/')[3];
+
+    await imageService.deleteImage(key);
+    await Product.query().findById(id).delete();
+
+    return res.send({ message: "deleted!" });
 });
 
 router.get('/featured', async (_, res) => {
@@ -61,6 +93,16 @@ router.get('/product/:id', async (req, res) => {
     const product = await Product.query().findById(req.params.id);
     return res.send({ product });
 });
+
+router.post('/product/check/:id', adminMiddleware, async (req, res) => {
+    await Product.query().patch({ is_featured: 1 }).where('id', req.params.id);
+    res.send({ message: "checked!" })
+})
+
+router.post('/product/uncheck/:id', adminMiddleware, async (req, res) => {
+    await Product.query().patch({ is_featured: 0 }).where('id', req.params.id);
+    res.send({ message: "unchecked!" })
+})
 
 router.get('/orders', authMiddleware, async (req, res) => {
     let orders = null;

@@ -1,0 +1,44 @@
+<body>
+    <div class="container">
+        <div id="stats" class="row"></div>
+        <div class="row statsMargin" id="orders">
+            <h4>Edit product</h4>
+            <form action="/admin/product" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                 
+                    <div class="input-field col s6">
+                        <input name="name" type="text" class="validate" id="name-field">
+                    </div>
+            
+                    <div class="input-field col s6">
+                        <input name="price" type="text" class="validate" id="price-field">
+                    </div>
+                </div>
+                <div class="row">
+           
+                    <div class="input-field col s6">
+                        <input name="description" type="text" class="validate" id="description-field">
+                    </div>
+               
+                    <div class="input-field col s6">
+                        <input name="stock" type="text" class="validate" id="stock-field">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <select name="category_id" id="category-select" class="browser-default">
+                            <option value="" disabled selected>Category</option>
+
+                        </select>
+                    </div>
+                    <div class="input-field col s6">
+                        <input name="product_id" type="hidden" id="product_id-field" />
+                    </div>
+                </div>
+                <button class="btn waves-effect waves-light light-blue darken-3" type="submit">Edit
+                    <i class="material-icons right">send</i>
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
