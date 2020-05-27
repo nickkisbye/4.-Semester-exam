@@ -105,7 +105,7 @@ $('document').ready(() => {
           <td>${product.price},-</td>
           <td>1</td>
         </tr>
-                `);
+        `);
       })
 
       $("#total").append(`<p>${totalPrice},-</p>`)

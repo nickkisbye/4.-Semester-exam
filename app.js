@@ -5,8 +5,6 @@ const rateLimit = require('express-rate-limit');
 const secret = require('./configs/mysqlConfig').connection.sessionSecret;
 const fileupload = require('express-fileupload');
 
-const { authMiddleware } = require('./middleware/MiddlewareManager');
-
 const dotenv = require("dotenv");
 dotenv.config();
 
