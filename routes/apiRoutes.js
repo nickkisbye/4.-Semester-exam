@@ -91,7 +91,8 @@ router.get('/featured', async (_, res) => {
 
 router.get('/product/:id', async (req, res) => {
     const product = await Product.query().findById(req.params.id);
-    return res.send({ product });
+    let role = req.session.user ? req.session.user.role : '';
+    return res.send({ product, role });
 });
 
 router.post('/product/check/:id', adminMiddleware, async (req, res) => {

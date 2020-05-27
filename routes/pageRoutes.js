@@ -26,6 +26,15 @@ router.get('/products/', (req, res) => {
     return res.send(generateLayout(products, req.session.user));
 });
 
+router.get('/card/', authMiddleware, (req, res) => {
+    const card = fs.readFileSync(path.join(__dirname, '../views/user/', 'card.html'), "utf8");
+    return res.send(generateLayout(card, req.session.user));
+});
+
+router.get('/product/:id', (req, res) => {
+    const product = fs.readFileSync(path.join(__dirname, '../views/', 'product.html'), "utf8");
+    return res.send(generateLayout(product, req.session.user));
+});
 
 router.get('/login', redirectLoggedInUser, (req, res) => {
     const login = fs.readFileSync(path.join(__dirname, '../views/', 'login.html'), "utf8");
