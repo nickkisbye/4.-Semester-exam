@@ -16,8 +16,17 @@
   <script src="/js/admin.js"></script>
   <script src="/js/users.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/js/socket.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"
+    integrity="sha256-Dul4c09cdrWKXVtallPxF558lwxMwCC8dXJdZ0PVW54=" crossorigin="anonymous"></script>
+  <script>
+
+    const socket = io.connect("localhost:3000");
+
+    socket.on('pagechanged', ({ address, port, pathname }) => {
+      M.toast({html: `User: ${address} on: ${pathname}`})
+    });
+
+  </script>
   <title>Tech webshop</title>
 </head>
 <header>
@@ -29,12 +38,12 @@
         <li><a href="/products">Products</a></li>
       </ul>
       <ul class="right">
-          <li><a href="/admin/categories">Categories</a></li>
-          <li><a href="/admin/products">Products</a></li>
-          <li><a href="/orders">All orders</a></li>
-          <li><a href="/admin/users">Users</a></li>
-          <li><a href="/settings">Settings</a></li>
-          <li><a class="btn grey lighten-4 black-text" href="/logout">Log out</a></li>
+        <li><a href="/admin/categories">Categories</a></li>
+        <li><a href="/admin/products">Products</a></li>
+        <li><a href="/orders">All orders</a></li>
+        <li><a href="/admin/users">Users</a></li>
+        <li><a href="/settings">Settings</a></li>
+        <li><a class="btn grey lighten-4 black-text" href="/logout">Log out</a></li>
       </ul>
     </div>
   </nav>

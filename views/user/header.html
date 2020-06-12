@@ -15,8 +15,14 @@
   <script src="/js/users.js"></script>
   <script src="/js/public.js"></script>
   <script src="/js/card.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/js/socket.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"
+    integrity="sha256-Dul4c09cdrWKXVtallPxF558lwxMwCC8dXJdZ0PVW54=" crossorigin="anonymous"></script>
+  <script>
+    const socket = io.connect("localhost:3000");
+    const pathname = $(location).attr('pathname')
+
+    socket.emit('pagechange', { pathname })
+  </script>
   <title>Tech webshop</title>
 </head>
 <header>
@@ -26,11 +32,11 @@
       <ul class="left hide-on-med-and-down">
         <li><a href="/">Home</a></li>
         <li><a href="/products">Products</a></li>
-        <li id="cart-content"></li>     
+        <li id="cart-content"></li>
       </ul>
       <ul class="right">
-          <li><a href="/orders">Your Orders</a></li>
-          <li><a href="/settings">Settings</a></li>
+        <li><a href="/orders">Your Orders</a></li>
+        <li><a href="/settings">Settings</a></li>
         <li><a class="btn grey lighten-4 black-text" href="/logout">Log out</a></li>
       </ul>
     </div>

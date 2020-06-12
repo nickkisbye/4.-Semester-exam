@@ -13,9 +13,14 @@
   <link rel="stylesheet" href="/custom.css" type="text/css" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="/js/public.js"></script>
-  <script src="/js/card.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/js/socket.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"
+    integrity="sha256-Dul4c09cdrWKXVtallPxF558lwxMwCC8dXJdZ0PVW54=" crossorigin="anonymous"></script>
+  <script>
+    const socket = io.connect("localhost:3000");
+    const pathname = $(location).attr('pathname')
+
+    socket.emit('pagechange', { pathname })
+  </script>
   <title>Tech webshop</title>
 </head>
 <header>
@@ -31,7 +36,7 @@
         <li><a class="btn grey lighten-4 black-text" href="/login">Log in</a></li>
       </ul>
     </div>
-    
+
   </nav>
 
   <ul class="sidenav" id="mobile-demo">

@@ -70,6 +70,42 @@ $('document').ready(() => {
         })
       })
       break;
+
+    case productRoute:
+      $.get('/api/product/' + productRoute.split("/")[2], ({ product, role }) => {
+
+        let storedProducts;
+
+        addToCart = () => {
+          if (localStorage.getItem('cardProducts')) {
+            storedProducts = JSON.parse(localStorage.getItem('cardProducts'));
+          } else {
+            storedProducts = [];
+          }
+
+          storedProducts.push({
+            name: product.name,
+            price: product.price,
+            id: product.id,
+            image_url: product.image_url
+          })
+          localStorage.setItem('cardProducts', JSON.stringify(storedProducts));
+          window.location.href = "/product/" + productRoute.split("/")[2]
+        }
+
+        if (productRoute.split("/")[2].length < 4) {
+          $("#product-content").append(`
+                        <img src="${product.image_url}" alt="" class="circle">
+                        <span class="title">${product.name}</span>
+                        <p>${product.price + ',-'}<br><br>
+                            ${product.description}
+                        </p>
+                        ${role === 'USER' ? `<a style="cursor: pointer;" onclick="addToCart()" class="secondary-content"><i class="material-icons waves-light red-text">shopping_cart</i></a>` :
+              ``}  
+                        `);
+        }
+      });
+      break;
     case "/products":
       $.get('/api/products', ({ products }) => {
         products.forEach((product) => {
@@ -109,39 +145,6 @@ $('document').ready(() => {
       })
 
       $("#total").append(`<p>${totalPrice},-</p>`)
-      break;
-    case productRoute:
-      $.get('/api/product/' + productRoute.split("/")[2], ({ product, role }) => {
-
-        let storedProducts;
-
-        addToCart = () => {
-          if (localStorage.getItem('cardProducts')) {
-            storedProducts = JSON.parse(localStorage.getItem('cardProducts'));
-          } else {
-            storedProducts = [];
-          }
-
-          storedProducts.push({
-            name: product.name,
-            price: product.price,
-            id: product.id,
-            image_url: product.image_url
-          })
-          localStorage.setItem('cardProducts', JSON.stringify(storedProducts));
-          window.location.href = "/product/" + productRoute.split("/")[2]
-        }
-
-        $("#product-content").append(`
-            <img src="${product.image_url}" alt="" class="circle">
-            <span class="title">${product.name}</span>
-            <p>${product.price + ',-'}<br><br>
-                ${product.description}
-            </p>
-            ${role === 'USER' ? `<a style="cursor: pointer;" onclick="addToCart()" class="secondary-content"><i class="material-icons waves-light red-text">shopping_cart</i></a>` :
-            ``}  
-            `);
-      });
       break;
     case "/categories":
       $.get('/api/categories', ({ categories }) => {

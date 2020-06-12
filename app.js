@@ -1,7 +1,7 @@
 const express = require('express');
-var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 const session = require('express-session');
 const rateLimit = require('express-rate-limit');
@@ -38,9 +38,12 @@ const knex = Knex(knexConfig.development);
 Model.knex(knex);
 
 io.on('connection', (socket) => {
-    console.log('A user connected');
+    const { address, port } = socket.request.connection._peername;
+    socket.on('pagechange', ({ pathname }) => {
+        io.emit('pagechanged', { address, port, pathname });
+    });
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+       
     });
 });
 
