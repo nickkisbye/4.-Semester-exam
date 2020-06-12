@@ -4,7 +4,7 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 
 const { authMiddleware, redirectLoggedInUser, adminMiddleware } = require('../middleware/MiddlewareManager');
-const { generateLayout } = require('../services/LayoutService')
+const { generateLayout } = require('../services/LayoutService');
 
 const Address = require('../models/Address');
 const User = require('../models/User');

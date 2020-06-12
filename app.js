@@ -1,5 +1,8 @@
 const express = require('express');
-const app = express();
+var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
+
 const session = require('express-session');
 const rateLimit = require('express-rate-limit');
 const secret = require('./configs/mysqlConfig').connection.sessionSecret;
@@ -34,7 +37,14 @@ const knexConfig = require('./knexfile');
 const knex = Knex(knexConfig.development);
 Model.knex(knex);
 
-app.listen(3000, (err) => {
+io.on('connection', (socket) => {
+    console.log('A user connected');
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
+
+server.listen(3000, (err) => {
     if (err) console.log(err);
     console.log("Listening on port", 3000);
 })
