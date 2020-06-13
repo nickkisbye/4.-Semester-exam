@@ -55,10 +55,10 @@ $('document').ready(() => {
             <div class="col s12 m3">
               <div class="card">
                 <div class="card-image">
-                  <img src="${product.image_url}">
+                  <img src="${product.image_url}" height="230">
                   </div>
                   <div class="card-content">
-                  <span class="card-title"><a href="/product/${product.id}">${product.name}</a></span>
+                  <span class="card-title" style="min-height: 100px;"><a href="/product/${product.id}">${product.name}</a></span>
                   <p><strong>In stock:</strong> ${product.stock} </p>
                   <p>${product.description}</p>
                   <br>
@@ -113,10 +113,10 @@ $('document').ready(() => {
             <div class="col s12 m3">
             <div class="card">
               <div class="card-image">
-                <img src="${product.image_url}">
+                <img src="${product.image_url}" height="230">
               </div>
               <div class="card-content">
-              <span class="card-title"><a href="/product/${product.id}">${product.name}</a></span>
+              <span class="card-title" style="min-height: 100px;"><a href="/product/${product.id}">${product.name}</a></span>
                 <p><strong>Category:</strong> ${product.category.name}</p>
                 <p><strong>In stock:</strong> ${product.stock} </p>
                 <p>${product.price},-</p>

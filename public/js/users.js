@@ -30,7 +30,7 @@ $('document').ready(() => {
                 order.forEach(item => {
                     $('#order-body').append(`
                     <tr>
-                    <td>${item.product.id}</td>
+                    <td><img src="${item.product.image_url}" width="50" height="50" /></td>
                     <td>${item.product.price}</td>
                     <td>${item.product.name}</td>
                     <td>${item.quantity}</td>
@@ -39,7 +39,7 @@ $('document').ready(() => {
                 });
 
                 $('#total').append(`
-                <span>${totalOrderPrice}</span>
+                <span>${totalOrderPrice + ',-'}</span>
               </tr>
         `);
             })
