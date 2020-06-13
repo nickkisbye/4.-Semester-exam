@@ -21,7 +21,10 @@
     const socket = io.connect("localhost:3000");
     const pathname = $(location).attr('pathname')
 
-    socket.emit('pagechange', { pathname })
+    $.get('/api/session', ({ user }) => {
+      socket.emit('pagechange', { username: user.username, pathname });
+    })
+
   </script>
   <title>Tech webshop</title>
 </head>

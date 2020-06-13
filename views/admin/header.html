@@ -22,8 +22,8 @@
 
     const socket = io.connect("localhost:3000");
 
-    socket.on('pagechanged', ({ address, port, pathname }) => {
-      M.toast({html: `User: ${address} on: ${pathname}`})
+    socket.on('pagechanged', ({ user, pathname }) => {
+      M.toast({html: `User: ${user} on: ${pathname}`})
     });
 
   </script>

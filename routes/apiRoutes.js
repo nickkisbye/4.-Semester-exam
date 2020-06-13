@@ -23,6 +23,10 @@ router.get('/roles', async (_, res) => {
     return res.send({ roles });
 });
 
+router.get('/session', async (req, res) => {
+    return res.send({ user: req.session.user });
+})
+
 router.get('/users', adminMiddleware, async (_, res) => {
     const users = await User.query().select(queryService.getSecureParameters()).withGraphFetched('roles').withGraphFetched('address');
     return res.send({ users });

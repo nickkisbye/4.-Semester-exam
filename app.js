@@ -38,12 +38,18 @@ const knex = Knex(knexConfig.development);
 Model.knex(knex);
 
 io.on('connection', (socket) => {
-    const { address, port } = socket.request.connection._peername;
-    socket.on('pagechange', ({ pathname }) => {
-        io.emit('pagechanged', { address, port, pathname });
+    const { address } = socket.request.connection._peername;
+    socket.on('pagechange', ({ username, pathname }) => {
+        let socketObject = {};
+        if (username === undefined) {
+            socketObject = { user: address, pathname };
+        } else {
+            socketObject = { user: username, pathname };
+        }
+        io.emit('pagechanged', socketObject);
     });
     socket.on('disconnect', () => {
-       
+
     });
 });
 
