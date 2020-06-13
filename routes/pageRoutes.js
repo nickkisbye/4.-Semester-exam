@@ -53,7 +53,8 @@ router.post('/login', async (req, res) => {
             req.session.user = {
                 id: user[0].id,
                 username: user[0].username,
-                role: user[0].roles.role
+                role: user[0].roles.role,
+                email: user[0].email
             }
             if (req.session.user.role === 'ADMIN') return res.redirect('/admin/products');
             if (req.session.user.role === 'USER') return res.redirect('/orders');

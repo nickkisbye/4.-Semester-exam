@@ -14,7 +14,7 @@ $('document').ready(() => {
                 orders.forEach((order) => {
                     $('#order-body').append(`
                         <tr>
-                        <td>${order.order_id}</td>
+                        <td>${order.id}</td>
                         <td>${order.created_at}</td>
                         <td>${order.users.email}</td>
                         <td>${order.state}</td>
@@ -43,6 +43,49 @@ $('document').ready(() => {
               </tr>
         `);
             })
+            break;
+        case "/card":
+
+            const storedProducts = JSON.parse(localStorage.getItem('cardProducts'));
+            let totalPrice = 0;
+
+            let stripeHandler
+            $.get('/payment/stripekey', ({ stripeKey, email }) => {
+                 stripeHandler = StripeCheckout.configure({
+                    key: stripeKey,
+                    locale: 'auto',
+                    currency: 'dkk',
+                    token: function(token) {
+                        $.post('/payment/purchase', { storedProducts, totalPrice, stripeTokenId: token.id }, ({ message }) => {
+                            if(message === 'success') {
+                                window.location.href = '/orders';
+                                localStorage.clear();
+                            }
+                        })
+                    }
+                })
+
+                onPayClick = () => {
+                    stripeHandler.open({
+                        amount: totalPrice * 100,
+                        email
+                    })
+                }
+            })
+
+            storedProducts.forEach((product) => {
+                totalPrice += Number(product.price);
+                $('#card-body').append(`
+                    <tr>
+                    <td><img src="${product.image_url}" width="25" height="25" /></td>
+                    <td>${product.name}</td>
+                    <td>${product.price},-</td>
+                    <td>1</td>
+                  </tr>
+                  `);
+            })
+
+            $("#total").append(`<p>${totalPrice},-</p>`)
             break;
         case "/settings":
             $.get('/api/settings', ({ settings }) => {

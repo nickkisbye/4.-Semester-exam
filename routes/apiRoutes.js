@@ -12,6 +12,7 @@ const queryService = require('../services/QueryService');
 const ImageService = require('../services/ImageService');
 
 
+
 // API routes
 
 /**
@@ -26,6 +27,8 @@ router.get('/roles', async (_, res) => {
 router.get('/session', async (req, res) => {
     return res.send({ user: req.session.user });
 })
+
+
 
 router.get('/users', adminMiddleware, async (_, res) => {
     const users = await User.query().select(queryService.getSecureParameters()).withGraphFetched('roles').withGraphFetched('address');

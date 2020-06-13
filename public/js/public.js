@@ -127,25 +127,6 @@ $('document').ready(() => {
         })
       })
       break;
-    case "/card":
-
-      const storedProducts = JSON.parse(localStorage.getItem('cardProducts'));
-      let totalPrice = 0;
-
-      storedProducts.forEach((product) => {
-        totalPrice += Number(product.price);
-        $('#card-body').append(`
-          <tr>
-          <td><img src="${product.image_url}" width="25" height="25" /></td>
-          <td>${product.name}</td>
-          <td>${product.price},-</td>
-          <td>1</td>
-        </tr>
-        `);
-      })
-
-      $("#total").append(`<p>${totalPrice},-</p>`)
-      break;
     case "/categories":
       $.get('/api/categories', ({ categories }) => {
         categories.forEach(category => {

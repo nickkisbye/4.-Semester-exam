@@ -22,14 +22,6 @@ exports.up = function (knex) {
 
             table.integer('quantity');
         })
-        .createTable('transactions', table => {
-            table.increments('id').notNullable();
-
-            table.integer('order_id').unsigned().notNullable();
-            table.foreign('order_id').references('orders.id');
-
-            table.string('status');
-        })
 };
 
 exports.down = function (knex) {

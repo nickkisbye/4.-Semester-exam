@@ -22,9 +22,11 @@ app.use(fileupload());
 // ROUTES
 const pageRoute = require('./routes/pageRoutes');
 const apiRoute = require('./routes/apiRoutes');
+const paymentRoute = require('./routes/paymentRoutes');
 
 app.use(pageRoute);
 app.use("/api", apiRoute);
+app.use("/payment", paymentRoute);
 
 /**
  * Objection and knex setup
