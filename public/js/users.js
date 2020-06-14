@@ -76,6 +76,13 @@ $('document').ready(() => {
                 }
             })
 
+            deleteFromCard = (id) => {
+                const storedProducts = JSON.parse(localStorage.getItem('cardProducts'));
+                let newProducts = storedProducts.filter(product => product.id !== id);
+                localStorage.setItem('cardProducts', JSON.stringify(newProducts))
+                window.location.href = '/card'
+            }
+
             storedProducts.forEach((product) => {
                 totalPrice += Number(product.price);
                 $('#card-body').append(`
@@ -84,6 +91,7 @@ $('document').ready(() => {
                     <td>${product.name}</td>
                     <td>${product.price},-</td>
                     <td>1</td>
+                    <td><i onclick="deleteFromCard(${product.id})" class="material-icons waves-light red-text" style="cursor: pointer;">delete</i></td>
                   </tr>
                   `);
             })

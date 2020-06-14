@@ -89,6 +89,7 @@ $('document').ready(() => {
             id: product.id,
             image_url: product.image_url
           })
+          
           localStorage.setItem('cardProducts', JSON.stringify(storedProducts));
           window.location.href = "/product/" + productRoute.split("/")[2]
         }
