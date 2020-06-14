@@ -1,6 +1,7 @@
 const { Model } = require('objection');
 
 const Order = require('./Order');
+const Category = require('./Category');
 const Product = require('./Product.js');
 
 class OrderDetails extends Model {
@@ -22,6 +23,15 @@ class OrderDetails extends Model {
               from: 'product_order_junc.product_id',
               to: 'products.id'
             }
+          },
+        product_stats: {
+          relation: Model.HasManyRelation,
+            modelClass: Product,
+            filter: query => query.select('category_id', 'price'),
+            join: {
+              from: 'product_order_junc.product_id',
+              to: 'products.id'
+            },
           }
     };
 }

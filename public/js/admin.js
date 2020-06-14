@@ -80,9 +80,9 @@ switch (pathname) {
                         <td>${product.price + ',-'}</td>
                         <td>${product.description}</td>
                         <td>${product.stock}</td>
-                        <td>${product.is_featured === 1 ? 
-                            `<i onclick="uncheckFeatured(${product.id})" style="cursor: pointer" class="material-icons">star</i>` 
-                            : `<i onclick="checkFeatured(${product.id})" style="cursor: pointer" class="material-icons">star_border</i>`}
+                        <td>${product.is_featured === 1 ?
+                        `<i onclick="uncheckFeatured(${product.id})" style="cursor: pointer" class="material-icons">star</i>`
+                        : `<i onclick="checkFeatured(${product.id})" style="cursor: pointer" class="material-icons">star_border</i>`}
                             </td>
                         <td><a href="/admin/product/${product.id}">Edit</a> / <a style="cursor: pointer" onclick="deleteProduct(${product.id})">delete</a></td>
                       </tr>
@@ -146,6 +146,61 @@ switch (pathname) {
                 `);
             })
         })
+        break;
 
-    break;
+    case '/dashboard':
+
+        $(document).ready(() => {
+            var config = {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Sales by Category',
+                        data: [],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                    maintainAspectRatio: false
+                }
+            };
+
+            var ctx = $("#myChart")[0].getContext('2d');
+            var myChart = new Chart(ctx, config);
+
+            $.get('/chart/salesbycategory', ({ stats, totalPrice }) => {
+                stats.forEach(stat => {
+                    config.data.labels.push(stat.category.name);
+                    config.data.datasets[0].data.push(stat.price);
+                }); 
+                $('#totalPrice').append(`<p><b>Total:</b> ${totalPrice + ',-'}</p>`)
+                myChart.update();
+            });
+        })
+
+        break;
 }

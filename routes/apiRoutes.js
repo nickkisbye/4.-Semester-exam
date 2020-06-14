@@ -11,8 +11,6 @@ const Roles = require('../models/Roles');
 const queryService = require('../services/QueryService');
 const ImageService = require('../services/ImageService');
 
-
-
 // API routes
 
 /**
@@ -27,8 +25,6 @@ router.get('/roles', async (_, res) => {
 router.get('/session', async (req, res) => {
     return res.send({ user: req.session.user });
 })
-
-
 
 router.get('/users', adminMiddleware, async (_, res) => {
     const users = await User.query().select(queryService.getSecureParameters()).withGraphFetched('roles').withGraphFetched('address');
@@ -104,12 +100,12 @@ router.get('/product/:id', async (req, res) => {
 
 router.post('/product/check/:id', adminMiddleware, async (req, res) => {
     await Product.query().patch({ is_featured: 1 }).where('id', req.params.id);
-    res.send({ message: "checked!" })
+    res.send({ message: "checked!" });
 })
 
 router.post('/product/uncheck/:id', adminMiddleware, async (req, res) => {
     await Product.query().patch({ is_featured: 0 }).where('id', req.params.id);
-    res.send({ message: "unchecked!" })
+    res.send({ message: "unchecked!" });
 })
 
 router.get('/orders', authMiddleware, async (req, res) => {

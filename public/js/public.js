@@ -1,6 +1,6 @@
 $('document').ready(() => {
 
-  const pathname = $(location).attr('pathname')
+  const pathname = $(location).attr('pathname');
 
   let productRoute = "";
 
@@ -73,7 +73,6 @@ $('document').ready(() => {
 
     case productRoute:
       $.get('/api/product/' + productRoute.split("/")[2], ({ product, role }) => {
-
         let storedProducts;
 
         addToCart = () => {
@@ -89,9 +88,9 @@ $('document').ready(() => {
             id: product.id,
             image_url: product.image_url
           })
-          
+
           localStorage.setItem('cardProducts', JSON.stringify(storedProducts));
-          window.location.href = "/product/" + productRoute.split("/")[2]
+          window.location.href = "/product/" + productRoute.split("/")[2];
         }
 
         if (productRoute.split("/")[2].length < 4) {
