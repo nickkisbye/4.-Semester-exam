@@ -117,10 +117,16 @@ router.get('/orders', authMiddleware, async (req, res) => {
     // User should be able to see his/her own orders. Admin can see all orders.
     if(req.session.user.role === 'USER') {
         orders = await Order.query().select().where('customer_id', req.session.user.id).withGraphFetched('users');
+        return res.send({ orders });
     } else {
         orders = await Order.query().select().withGraphFetched('users');
+        const orderDetails = await OrderDetails.query().select().withGraphFetched('products');
+        let totalOrderPrice = 0;
+        orderDetails.forEach((order => {
+            totalOrderPrice += Number(order.products[0].price) * order.quantity;
+        }));
+        return res.send({ orders, totalOrderPrice });
     }
-    return res.send({ orders });
 });
 
 router.get('/order/:id', authMiddleware, async (req, res) => {

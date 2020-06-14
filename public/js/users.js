@@ -10,7 +10,7 @@ $('document').ready(() => {
 
     switch (pathname) {
         case "/orders":
-            $.get('/api/orders', ({ orders }) => {
+            $.get('/api/orders', ({ orders, totalOrderPrice }) => {
                 orders.forEach((order) => {
                     $('#order-body').append(`
                         <tr>
@@ -22,6 +22,9 @@ $('document').ready(() => {
                       </tr>
                     `);
                 })
+                if(totalOrderPrice) {
+                    $('#totalPrice').append(`<span>${'Total: ' + totalOrderPrice + ',-'}</span>`);
+                }
             })
             break;
 
