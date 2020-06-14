@@ -195,7 +195,7 @@ switch (pathname) {
             $.get('/chart/salesbycategory', ({ stats, totalPrice }) => {
                 stats.forEach(stat => {
                     config.data.labels.push(stat.category.name);
-                    config.data.datasets[0].data.push(stat.price);
+                    config.data.datasets[0].data.push(stat.category.price);
                 }); 
                 $('#totalPrice').append(`<p><b>Total:</b> ${totalPrice + ',-'}</p>`)
                 myChart.update();
