@@ -1,11 +1,10 @@
 const router = require('express').Router();
 const { adminMiddleware } = require('../middleware/MiddlewareManager');
 const OrderDetails = require('../models/OrderDetails');
-const Category = require('../models/Category');
 
 router.get('/salesbycategory', adminMiddleware, async (req, res) => {
     let orderDetails = 
-    await OrderDetails.query().select('categories.id', 'categories.name', 'products.price')
+    await OrderDetails.query().select('categories.id', 'categories.name', 'products.price', 'quantity')
     .join('products', 'product_order_junc.product_id', 'products.id')
     .join('categories', 'products.category_id', 'categories.id').orderBy('categories.id', 'ASC');
 
@@ -15,10 +14,10 @@ router.get('/salesbycategory', adminMiddleware, async (req, res) => {
     let totalPrice = 0;
 
     for(let i = 0; i < orderDetails.length; i++) {
-        totalPrice += Number(orderDetails[i].price);
+        totalPrice += Number(orderDetails[i].price) * orderDetails[i].quantity;
         if(orderDetails[i].name !== prevCategory) {
             prevCategory = orderDetails[i].name;
-            price = Number(orderDetails[i].price);
+            price = Number(orderDetails[i].price) * orderDetails[i].quantity;
             statsData.push({
                 category: {
                     name: orderDetails[i].name,
@@ -26,13 +25,10 @@ router.get('/salesbycategory', adminMiddleware, async (req, res) => {
                 }
             })
         } else {
-            price += Number(orderDetails[i].price);
+            price += Number(orderDetails[i].price) * orderDetails[i].quantity;
             statsData[statsData.length - 1]['category'].price = price;
         }
     }
-
-    console.log(statsData);
-
     return res.send({ stats: statsData, totalPrice });
 });
 

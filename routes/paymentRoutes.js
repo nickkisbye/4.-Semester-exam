@@ -6,7 +6,7 @@ const stripeKey = process.env.STRIPE_KEY
 const MailSender = require('../services/MailSender');
 
 router.get('/stripekey', async (req, res) => {
-    res.send({stripeKey, email: req.session.user.email});
+    res.send({ stripeKey, email: req.session.user.email });
 });
 
 
@@ -17,7 +17,7 @@ router.post('/purchase', async (req, res) => {
         source: stripeTokenId,
         currency: 'dkk'
     }).then(async () => {
-        const newOrder = await Order.query().insert({ 
+        const newOrder = await Order.query().insert({
             customer_id: req.session.user.id,
             state: 'Finished'
         })
@@ -25,10 +25,10 @@ router.post('/purchase', async (req, res) => {
         let prevProduct;
         let count;
         let productData = [];
-        storedProducts.sort();
+        storedProducts.sort((a, b) => { if (a.id < b.id) { return -1; } if (a.id > b.id) { return 1; } else return 0 });
 
-        for(let i = 0; i<storedProducts.length; i++) {
-            if(storedProducts[i].name !== prevProduct) {
+        for (let i = 0; i < storedProducts.length; i++) {
+            if (storedProducts[i].name !== prevProduct) {
                 prevProduct = storedProducts[i].name;
                 count = 1;
                 productData.push({ [storedProducts[i].id]: count })
@@ -73,7 +73,7 @@ router.post('/purchase', async (req, res) => {
             <td>1</td>
           </tr>`
         });
-        
+
         html += `</tbody></table>`
         html += `<p>Total: ${totalAmount}</p>`
 

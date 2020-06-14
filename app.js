@@ -5,7 +5,7 @@ const io = require('socket.io')(server);
 
 const session = require('express-session');
 const rateLimit = require('express-rate-limit');
-const secret = require('./configs/mysqlConfig').connection.sessionSecret;
+const secret = require('./configs/mysqlConfig').production.sessionSecret;
 const fileupload = require('express-fileupload');
 
 const dotenv = require("dotenv");
@@ -43,7 +43,7 @@ const { Model } = require('objection');
 const Knex = require('knex');
 const knexConfig = require('./knexfile');
 
-const knex = Knex(knexConfig.development);
+const knex = Knex(knexConfig.production);
 Model.knex(knex);
 
 io.on('connection', (socket) => {

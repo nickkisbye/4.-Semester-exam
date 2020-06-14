@@ -1,8 +1,12 @@
-const { connection } = require("./configs/mysqlConfig.js");
+const { development, production } = require("./configs/mysqlConfig.js");
 
 module.exports = {
   development: {
     client: 'mysql',
-    connection
+    connection: development
+  },
+  production: {
+    client: 'mysql',
+    connection: production
   }
 };
